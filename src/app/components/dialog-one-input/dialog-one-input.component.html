@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Agregar opción para lista</h1>
+
+<div mat-dialog-content>
+  <form class="form p-2" [formGroup]="form">
+    <mat-form-field class="field" [color]="'accent'" appearance="outline">
+      <mat-label>Ingrese el valor</mat-label>
+      <input
+        matInput
+        formControlName="value"
+        autocomplete="off"
+        cdkFocusInitial
+        required
+      />
+      <mat-error *ngIf="validField('value', form)"
+        >Requerido</mat-error
+      >
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions class="actions">
+  <button mat-button (click)="onClose()">Cerrar</button>
+  <button mat-button (click)="onSubmit()">Agregar</button>
+</div>
+

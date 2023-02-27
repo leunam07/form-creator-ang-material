@@ -1,0 +1,46 @@
+<h1 mat-dialog-title>{{ titleModal }}</h1>
+
+<div mat-dialog-content>
+  <form class="form p-2" [formGroup]="formBeginTemplate">
+    <mat-form-field class="field" [color]="'accent'" appearance="outline">
+      <mat-label>Etiqueta del Campo</mat-label>
+      <input
+        matInput
+        formControlName="label"
+        autocomplete="off"
+        cdkFocusInitial
+        required
+      />
+      <mat-error *ngIf="validField('label', formBeginTemplate)"
+        >Requerido</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field class="field" [color]="'accent'" appearance="outline">
+      <mat-label>Nombre del campo</mat-label>
+      <input matInput formControlName="name" autocomplete="off" required />
+      <mat-error *ngIf="validField('name', formBeginTemplate)"
+        >Requerido</mat-error
+      >
+    </mat-form-field>
+    <div class="row justify-content-between">
+      <mat-label class="col-6">Opciones: {{ options.length }}</mat-label
+      ><button
+        class="col-6"
+        mat-icon-button
+        color="accent"
+        aria-label="Example icon button with a menu icon"
+        (click)="showAddOptionForm()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="options.length">
+      <mat-label *ngFor="let opt of options">{{ opt }}<br /></mat-label>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions class="actions">
+  <button mat-button (click)="onClose()">Cerrar</button>
+  <button mat-button (click)="openFormBuilder()">Agregar</button>
+</div>

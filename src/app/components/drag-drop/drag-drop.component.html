@@ -1,0 +1,200 @@
+<div class="row container p-2" cdkDropListGroup>
+  <div class="col-md-4">
+    <div
+      cdkDropList
+      [cdkDropListData]="fields"
+      class="example-list list-group drop-area"
+    >
+      <div class="example-box" *ngFor="let item of fields" cdkDrag>
+        {{ item.field }}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8 p-4 drop-area">
+    <h3 class="text-black">Titulo del Formulario</h3>
+    <div
+      cdkDropList
+      [cdkDropListData]="fieldsAdded"
+      class="example-list border-navy"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <div
+        class="drop-box"
+        *ngFor="let item of fieldsAdded; let i = index"
+        cdkDrag
+      >
+        <!-- input -->
+        <mat-form-field
+          *ngIf="item.field === 'input'"
+          appearance="outline"
+          class="w-100"
+        >
+          <mat-label>{{ item.label }}</mat-label>
+          <input matInput [required]="item.required" [type]="item.type!" />
+        </mat-form-field>
+
+        <!-- text-area -->
+        <mat-form-field
+          *ngIf="item.field === 'textarea'"
+          appearance="outline"
+          class="w-100"
+        >
+          <mat-label>{{ item.label }}</mat-label>
+          <textarea matInput [required]="item.required"></textarea>
+        </mat-form-field>
+
+        <!-- select -->
+        <mat-form-field
+          *ngIf="item.field === 'select'"
+          appearance="outline"
+          class="w-100"
+        >
+          <mat-label>{{ item.label }}</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let opt of item.options" [value]="opt.value">
+              {{ opt.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- checkbox -->
+        <span *ngIf="item.field === 'checkbox'" class="example-list-section">
+          <div class="row justify-content-start">
+            <label>{{ item.label }}</label>
+            <div class="col-sm-4" *ngFor="let check of item.checks">
+              <label
+                ><input
+                  type="checkbox"
+                  [name]="item.name"
+                  [value]="check.value"
+                />
+                {{ check.value }}</label
+              ><br />
+            </div>
+          </div>
+        </span>
+
+        <!-- botones -->
+        <div class="row m-1 mt-0">
+          <mat-icon class="p-2 pointer" (click)="openDialogEdit(i)"
+            >edit</mat-icon
+          >
+          <mat-icon class="p-2" cdkDragHandle>open_with</mat-icon>
+          <mat-icon class="p-2 pointer" (click)="deleteItem(i)"
+            >delete_forever</mat-icon
+          >
+        </div>
+      </div>
+
+      <div class="row">
+        <button
+          mat-button
+          color="secondary"
+          class="col-sm-4 mb-4 mx-auto"
+          *ngIf="fieldsAdded.length"
+          (click)="saveForm()"
+        >
+          Guardar formulario
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showFormResult" class="col-md-8 p-4 drop-area my-5 mx-auto">
+    <h3 class="text-black">Previsualización del Formulario</h3>
+    <div class="example-list border-navy">
+      <form [formGroup]="formResult">
+        <div class="drop-box" *ngFor="let item of fieldsAdded; let i = index">
+          <!-- input -->
+          <mat-form-field
+            *ngIf="item.field === 'input'"
+            appearance="outline"
+            class="w-100"
+          >
+            <mat-label>{{ item.label }}</mat-label>
+            <input
+              matInput
+              [formControlName]="item.name"
+              [required]="item.required"
+              [type]="item.type!"
+            />
+            <mat-error *ngIf="validField(item.name, formResult)"
+              >Requerido</mat-error
+            >
+          </mat-form-field>
+
+          <!-- text-area -->
+          <mat-form-field
+            *ngIf="item.field === 'textarea'"
+            appearance="outline"
+            class="w-100"
+          >
+            <mat-label>{{ item.label }}</mat-label>
+            <textarea
+              matInput
+              [formControlName]="item.name"
+              [required]="item.required"
+            ></textarea>
+            <mat-error *ngIf="validField(item.name, formResult)"
+              >Requerido</mat-error
+            >
+          </mat-form-field>
+
+          <!-- select -->
+          <mat-form-field
+            *ngIf="item.field === 'select'"
+            appearance="outline"
+            class="w-100"
+          >
+            <mat-label>{{ item.label }}</mat-label>
+            <mat-select [formControlName]="item.name">
+              <mat-option *ngFor="let opt of item.options" [value]="opt.value">
+                {{ opt.value }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="validField(item.name, formResult)"
+              >Requerido</mat-error
+            >
+          </mat-form-field>
+
+          <!-- checkbox -->
+          <span *ngIf="item.field === 'checkbox'" class="example-list-section">
+            <div class="row justify-content-start">
+              <label>{{ item.label }}</label>
+              <div
+                class="col-sm-4"
+                *ngFor="let check of item.checks; let i = index"
+                [formArrayName]="item.name"
+              >
+                <label
+                  ><input
+                    type="checkbox"
+                    [value]="check.value"
+                    [formControlName]="i"
+                  />
+                  {{ check.value }}</label
+                ><br />
+              </div>
+            </div>
+            <mat-error *ngIf="validField(item.name, formResult)"
+              >Requerido</mat-error
+            >
+          </span>
+        </div>
+      </form>
+
+      <div class="row">
+        <button
+          mat-button
+          color="secondary"
+          class="col-sm-4 mb-4 mx-auto"
+          *ngIf="fieldsAdded.length"
+          (click)="showResultDataInput()"
+        >
+          Enviar Datos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
